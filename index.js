@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const apiRouter = require('./routes/poisRouter')
-const validator = require('./query_validator')
 
 const app = express();
 const port = 3000;
@@ -12,8 +11,6 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
 
 app.use('/api/v1', apiRouter);
-
-app.use(validator);
 
 app.listen(port, () =>
     console.log(`Example app listening on port ${port}!`))

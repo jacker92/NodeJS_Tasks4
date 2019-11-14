@@ -1,16 +1,27 @@
-const validate = (req,res) => {
-    console.log("In validate!");
-
-    let action = req.query["action"];
-    if(action) {
-        if(action != 'today' && action != 'tomorrow') {
-            res.status(400);
-        } else {
-            res.status(200);
-        }
-    } else {
-        res.status(200);
-    }
+const { body, validationResult } = require('express-validator')
+const bodyValidationRules = () => {
+    return [
+        body('name').exists(),
+        body('description').exists(),
+        body('city').exists(),
+        body('coordinates').exists()
+    ]
 }
 
-module.exports = validate
+const validate = (req, res, next) => {
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
+        return next()
+    }
+    const extractedErrors = []
+    errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
+
+    return res.status(400).json({
+        errors: extractedErrors,
+    })
+}
+
+module.exports = {
+    bodyValidationRules,
+    validate,
+}
