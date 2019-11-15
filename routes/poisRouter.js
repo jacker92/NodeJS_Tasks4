@@ -16,29 +16,36 @@ router.get('/:id', (req, res) => {
     }
 });
 
-router.post('/', validator.bodyValidationRules(), validator.validate, (req, res) => {
-    let poi = db.createPoi(req.body);
-    res.status(201).send(req.body);
-});
+router.post('/', validator.tokenValidationRules(),
+    validator.validateToken,
+    validator.bodyValidationRules(),
+    validator.validate, (req, res) => {
+        let poi = db.createPoi(req.body);
+        res.status(201).send(req.body);
+    });
 
-router.put('/:id', validator.bodyValidationRules(), validator.validate, (req, res) => {
-    let poiExists = db.getPoi(req.params.id);
-    let poi = db.setPoi(req.params.id, req.body);
+router.put('/:id', validator.tokenValidationRules(),
+    validator.validateToken,
+    validator.bodyValidationRules(),
+    validator.validate, (req, res) => {
+        let poiExists = db.getPoi(req.params.id);
+        let poi = db.setPoi(req.params.id, req.body);
 
-     if (poiExists) {
-        res.status(200).send(poi);
-    } else {
-        res.status(201).send(poi);
-    }
-});
+        if (poiExists) {
+            res.status(200).send(poi);
+        } else {
+            res.status(201).send(poi);
+        }
+    });
 
-router.delete('/:id', (req, res) => {
-    let poi = db.deletePoi(req.params.id);
-    if (poi) {
-        res.status(204).send();
-    } else {
-        res.status(404).send();
-    }
-});
+router.delete('/:id', validator.tokenValidationRules(),
+    validator.validateToken, (req, res) => {
+        let poi = db.deletePoi(req.params.id);
+        if (poi) {
+            res.status(204).send();
+        } else {
+            res.status(404).send();
+        }
+    });
 
 module.exports = router
