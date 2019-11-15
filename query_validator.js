@@ -1,4 +1,4 @@
-const { body, header, validationResult } = require('express-validator')
+const { body, query, header, validationResult } = require('express-validator')
 const token = require('./tokens.js')
 
 const bodyValidationRules = () => {
@@ -14,8 +14,17 @@ const tokenValidationRules = () => {
     return [
         header('Authorization').custom(value => {
             console.log(value);
-           return token.verify(value.split(" ")[1]) 
+            return token.verify(value.split(" ")[1])
         })
+    ]
+}
+
+const queryValidationRules = () => {
+    return [
+        query("filter").exists(),
+        query("radius").exists(),
+        query("lat").exists(),
+        query("lng").exists()
     ]
 }
 
@@ -57,5 +66,6 @@ module.exports = {
     authorizationValidationRules,
     tokenValidationRules,
     validateToken,
+    queryValidationRules,
     validate,
 }
