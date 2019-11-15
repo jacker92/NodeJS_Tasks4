@@ -8,6 +8,13 @@ const bodyValidationRules = () => {
     ]
 }
 
+const authorizationValidationRules = () => {
+    return [
+        body('username').exists(),
+        body('password').exists()
+    ]
+}
+
 const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -23,5 +30,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
     bodyValidationRules,
+    authorizationValidationRules,
     validate,
 }
